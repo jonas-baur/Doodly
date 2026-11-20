@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:Doodly"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1600" d:DesignHeight="800"
+        x:Class="Doodly.MainWindow"
+        Title="Doodly"
+        Icon="/assets/doodly.ico">
+    <Window.Resources>
+        <local:LogarithmicZoomConverter x:Key="LogarithmicZoomConverter" />
+    </Window.Resources>
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="4" Margin="10">
+            <Button Click="SaveButton_OnClick">Save</Button>
+            <Button Click="LoadButton_OnClick">Load</Button>
+            <ToggleButton x:Name="EraseToggle" Click="EraseToggle_OnClick">Erase</ToggleButton>
+            <ToggleButton x:Name="DrawToggle" Click="DrawToggle_OnClick">Draw</ToggleButton>
+            <ToggleButton x:Name="FillToggle" Click="FillToggle_OnClick">Fill</ToggleButton>
+            <ToggleButton x:Name="PickerToggle" Click="PickerToggle_OnClick">Picker</ToggleButton>
+            <Label>Size</Label>
+            <Slider x:Name="SizeSlider" Width="100" Value="10" Minimum="1" Maximum="256"></Slider>
+            <NumericUpDown Width="130"
+                           Height="32"
+                           Minimum="1"
+                           Maximum="256"
+                           Value="{Binding #SizeSlider.Value, Mode=TwoWay}"
+                           FormatString="0">
+                <NumericUpDown.InnerRightContent>
+                    <TextBlock Margin="2">px</TextBlock>
+                </NumericUpDown.InnerRightContent>
+            </NumericUpDown>
+            <ColorPicker x:Name="SelectedColorPicker" />
+            <Button Click="UndoButton_OnClick">Undo</Button>
+            <Button Click="RedoButton_OnClick">Redo</Button>
+            <Label>Zoom</Label>
+            <Slider x:Name="ZoomSlider"
+                    Width="100"
+                    Value="0.6666667"
+                    Minimum="0"
+                    Maximum="1"></Slider>
+            <NumericUpDown x:Name="ZoomNumericUpDown"
+                           Width="140"
+                           Height="32"
+                           Minimum="1"
+                           Maximum="1000"
+                           Value="{Binding #ZoomSlider.Value, Mode=TwoWay, Converter={StaticResource LogarithmicZoomConverter}}"
+                           FormatString="0">
+                <NumericUpDown.InnerRightContent>
+                    <TextBlock Margin="2">%</TextBlock>
+                </NumericUpDown.InnerRightContent></NumericUpDown>
+            <Label>Brush Strength</Label>
+            <Slider x:Name="BrushStrengthSlider"
+                    Width="100"
+                    Value="100"
+                    Minimum="0"
+                    Maximum="100"
+                    ></Slider>
+            <NumericUpDown Width="130"
+                           Height="32"
+                           Minimum="0"
+                           Maximum="100"
+                           Value="{Binding #BrushStrengthSlider.Value, Mode=TwoWay}"
+                           FormatString="0">
+                <NumericUpDown.InnerRightContent>
+                    <TextBlock Margin="2">%</TextBlock>
+                </NumericUpDown.InnerRightContent></NumericUpDown>
+        </StackPanel>
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource ComboBoxBorderBrush}"
+                BorderThickness="10">
+            <Border.Background>
+                <DrawingBrush TileMode="Tile"
+                              DestinationRect="0,0,32,32">
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing Brush="#FFF5F5F5">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,32,32" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <GeometryDrawing Brush="#FFEFEFEF">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,16,16" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <GeometryDrawing Brush="#FFEFEFEF">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="16,16,16,16" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Border.Background>
+            <ScrollViewer x:Name="CanvasScrollViewer"
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+                <Image Name="CanvasImage"
+                       PointerPressed="CanvasImage_OnPointerPressed"
+                       PointerMoved="CanvasImage_OnPointerMoved"
+                       PointerReleased="CanvasImage_OnPointerReleased"
+                       Stretch="Fill"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>

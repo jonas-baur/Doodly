@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Doodly
+Comment=Draw and edit images
+Exec=Doodly %f
+Terminal=false
+Categories=Graphics;2DGraphics;
+MimeType=image/png;image/jpeg;image/bmp;image/gif;
