@@ -1,5 +1,8 @@
 name: build and publish
 
+permissions:
+  contents: write
+
 on: workflow_dispatch
 
 jobs:
@@ -104,3 +107,16 @@ jobs:
             zip -rq "../${dir}.zip" "$dir"
             tar -czf "../${dir}.tar.gz" "$dir"
           done
+  publish:
+    needs: compressed-packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ vars.VERSION }}
+          name: Doodly v${{ vars.VERSION }}
+          files: |
+            *.zip
+            *.tar.gz
+            artifacts/doodly-debian-amd64-v${{ vars.VERSION }}/*.deb
