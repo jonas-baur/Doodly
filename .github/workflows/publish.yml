@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet publish src/MyApp.Desktop/MyApp.Desktop.csproj
+      - run: dotnet publish src/Doodly/Doodly.csproj
           --configuration Release
           --runtime win-x64
           --self-contained true
@@ -19,7 +19,7 @@ jobs:
           -o publish/win-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: myapp-win-x64
+          name: doodly-win-x64
           path: publish/win-x64/
 
   package-linux:
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet publish src/MyApp.Desktop/MyApp.Desktop.csproj
+      - run: dotnet publish src/Doodly/Doodly.csproj
           --configuration Release
           --runtime linux-x64
           --self-contained true
@@ -37,7 +37,7 @@ jobs:
           -o publish/linux-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: myapp-linux-x64
+          name: doodly-linux-x64
           path: publish/linux-x64/
 
   package-macos:
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet publish src/MyApp.Desktop/MyApp.Desktop.csproj
+      - run: dotnet publish src/Doodly/Doodly.csproj
           --configuration Release
           --runtime osx-x64
           --self-contained true
@@ -55,6 +55,6 @@ jobs:
           -o publish/osx-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: myapp-macos-x64
+          name: doodly-macos-x64
           path: publish/osx-x64/
 
