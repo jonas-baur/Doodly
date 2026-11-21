@@ -1,4 +1,4 @@
-name: build and publish ${{ vars.VERSION }}
+name: build and publish
 
 on: workflow_dispatch
 
@@ -19,7 +19,7 @@ jobs:
           -o publish/win-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: doodly-win-x64
+          name: doodly-win-x64-v${{vars.VERSION}}
           path: publish/win-x64/
 
   package-linux:
@@ -37,7 +37,7 @@ jobs:
           -o publish/linux-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: doodly-linux-x64
+          name: doodly-linux-x64-v${{vars.VERSION}}
           path: publish/linux-x64/
 
   package-macos:
@@ -55,6 +55,34 @@ jobs:
           -o publish/osx-x64
       - uses: actions/upload-artifact@v4
         with:
-          name: doodly-macos-x64
+          name: doodly-macos-x64-v${{vars.VERSION}}
           path: publish/osx-x64/
 
+  package:
+    needs:
+      - package-windows
+      - package-linux
+      - package-macos
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ vars.APP_VERSION }}
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create release archives
+        run: |
+          cd artifacts
+          for platform in win-x64 linux-x64 macos-x64; do
+            zip -rq "../doodly-${platform}-v${VERSION}.zip" "doodly-${platform}"
+            tar -czf "../doodly-${platform}-v${VERSION}.tar.gz" "doodly-${platform}"
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: doodly-release-v${{ vars.APP_VERSION }}
+          path: |
+            doodly-*-v${{ vars.APP_VERSION }}.zip
+            doodly-*-v${{ vars.APP_VERSION }}.tar.gz
