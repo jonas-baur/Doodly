@@ -73,16 +73,13 @@ jobs:
           path: artifacts
 
       - name: Create release archives
+        working-directory: artifacts
+        env:
+          VERSION: ${{ vars.VERSION }}
         run: |
-          cd artifacts
+          test -n "$VERSION" || { echo "VERSION variable is empty"; exit 1; }
+
           for platform in win-x64 linux-x64 macos-x64; do
             zip -rq "../doodly-${platform}-v${VERSION}.zip" "doodly-${platform}"
             tar -czf "../doodly-${platform}-v${VERSION}.tar.gz" "doodly-${platform}"
           done
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: doodly-release-v${{ vars.APP_VERSION }}
-          path: |
-            doodly-*-v${{ vars.APP_VERSION }}.zip
-            doodly-*-v${{ vars.APP_VERSION }}.tar.gz
