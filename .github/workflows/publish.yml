@@ -77,14 +77,12 @@ jobs:
         env:
           VERSION: ${{ vars.VERSION }}
         run: |
-          cd artifacts
-
-          for platform in win-x64 linux-x64 macos-x64; do
-          if [ ! -d "doodly-$platform" ]; then
-          echo "Missing: doodly-$platform"
-          exit 1
-          fi
-
-          zip -rq "../doodly-$platform-v${VERSION}.zip" "doodly-$platform"
-          tar -czf "../doodly-$platform-v${VERSION}.tar.gz" "doodly-$platform"
+          zip -r "../doodly-win-x64-v${VERSION}.zip" "doodly-win-x64-v${VERSION}"
+          tar -czf "../doodly-win-x64-v${VERSION}.tar.gz" "doodly-win-x64-v${VERSION}"
+          
+          zip -r "../doodly-linux-x64-v${VERSION}.zip" "doodly-linux-x64-v${VERSION}"
+          tar -czf "../doodly-linux-x64-v${VERSION}.tar.gz" "doodly-linux-x64-v${VERSION}"
+          
+          zip -r "../doodly-macos-x64-v${VERSION}.zip" "doodly-macos-x64-v${VERSION}"
+          tar -czf "../doodly-macos-x64-v${VERSION}.tar.gz" "doodly-macos-x64-v${VERSION}"
           done
