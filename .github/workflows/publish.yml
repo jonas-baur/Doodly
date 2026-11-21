@@ -35,10 +35,31 @@ jobs:
           --self-contained true
           -p:PublishSingleFile=true
           -o publish/linux-x64
+      - name: Install FPM
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby ruby-dev build-essential
+          sudo gem install --no-document fpm
+      - name: Build Debian package
+        env:
+          VERSION: ${{ vars.VERSION }}
+        run: |
+          fpm -s dir -t deb \
+            --name doodly \
+            --version "$VERSION" \
+            --architecture amd64 \
+            --maintainer "Doodly maintainers" \
+            --description "Draw and edit images" \
+            --prefix /opt/doodly \
+            -C publish/linux-x64 .
       - uses: actions/upload-artifact@v4
         with:
-          name: doodly-linux-x64-v${{vars.VERSION}}
+          name: doodly-linux-x64-v${{ vars.VERSION }}
           path: publish/linux-x64/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: doodly-debian-amd64-v${{ vars.VERSION }}
+          path: doodly_*_amd64.deb
 
   package-macos:
     runs-on: macos-latest
@@ -58,7 +79,7 @@ jobs:
           name: doodly-macos-x64-v${{vars.VERSION}}
           path: publish/osx-x64/
 
-  package:
+  compressed-packages:
     needs:
       - package-windows
       - package-linux
