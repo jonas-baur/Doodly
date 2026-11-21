@@ -77,12 +77,9 @@ jobs:
         env:
           VERSION: ${{ vars.VERSION }}
         run: |
-          zip -r "../doodly-win-x64-v${VERSION}.zip" "doodly-win-x64-v${VERSION}"
-          tar -czf "../doodly-win-x64-v${VERSION}.tar.gz" "doodly-win-x64-v${VERSION}"
-          
-          zip -r "../doodly-linux-x64-v${VERSION}.zip" "doodly-linux-x64-v${VERSION}"
-          tar -czf "../doodly-linux-x64-v${VERSION}.tar.gz" "doodly-linux-x64-v${VERSION}"
-          
-          zip -r "../doodly-macos-x64-v${VERSION}.zip" "doodly-macos-x64-v${VERSION}"
-          tar -czf "../doodly-macos-x64-v${VERSION}.tar.gz" "doodly-macos-x64-v${VERSION}"
+          set -e
+          for platform in win-x64 linux-x64 macos-x64; do
+            dir="doodly-${platform}-v${VERSION}"
+            zip -rq "../${dir}.zip" "$dir"
+            tar -czf "../${dir}.tar.gz" "$dir"
           done
