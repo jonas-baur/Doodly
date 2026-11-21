@@ -77,9 +77,14 @@ jobs:
         env:
           VERSION: ${{ vars.VERSION }}
         run: |
-          test -n "$VERSION" || { echo "VERSION variable is empty"; exit 1; }
+          cd artifacts
 
           for platform in win-x64 linux-x64 macos-x64; do
-            zip -rq "../doodly-${platform}-v${VERSION}.zip" "doodly-${platform}"
-            tar -czf "../doodly-${platform}-v${VERSION}.tar.gz" "doodly-${platform}"
+          if [ ! -d "doodly-$platform" ]; then
+          echo "Missing: doodly-$platform"
+          exit 1
+          fi
+
+          zip -rq "../doodly-$platform-v${VERSION}.zip" "doodly-$platform"
+          tar -czf "../doodly-$platform-v${VERSION}.tar.gz" "doodly-$platform"
           done
